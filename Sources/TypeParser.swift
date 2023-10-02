@@ -241,3 +241,28 @@ class TypeParser {
 }
 
 #endif
+
+private extension Scanner {
+    
+    var scanLocation: Int? {
+        get {
+            for (offset, _) in string.enumerated() {
+                let index = string.index(string.startIndex, offsetBy: offset)
+                if index == currentIndex {
+                    return offset
+                }
+            }
+
+            return nil
+        }
+        set {
+            guard let startValue = scanLocation, let newValue else { return }
+            let delta = newValue - startValue
+            var offset = 0
+            while isAtEnd == false, offset != delta {
+                currentIndex = string.index(currentIndex, offsetBy: delta > 0 ? 1 : -1)
+                offset += delta > 0 ? 1 : -1
+            }
+        }
+    }
+}
